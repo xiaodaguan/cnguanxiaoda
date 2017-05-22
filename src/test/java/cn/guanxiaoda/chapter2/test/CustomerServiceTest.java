@@ -4,12 +4,17 @@ package cn.guanxiaoda.chapter2.test;
  * Created by guanxiaoda on 17/5/19.
  */
 
+import cn.guanxiaoda.chapter2.helper.DatabaseHelper;
 import cn.guanxiaoda.chapter2.model.Customer;
 import cn.guanxiaoda.chapter2.service.CustomerService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +23,7 @@ import java.util.Map;
  * 单元测试
  */
 public class CustomerServiceTest {
+
     private final CustomerService customerService;
 
     public CustomerServiceTest() {
@@ -25,8 +31,15 @@ public class CustomerServiceTest {
     }
 
     @Before
-    public void init(){
-        // todo 初始化数据库
+    public void init() throws IOException {
+        String file = "sql/customer_init.sql";
+        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(file);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        String sql;
+        while((sql = reader.readLine())!= null){
+            DatabaseHelper.executeUpdate(sql);
+        }
+        reader.close();
     }
 
     @Test
